@@ -1,0 +1,157 @@
+{% load i18n admin_static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>E-Business | Log in</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <link rel="shortcut icon" href="{% static 'adminlte/img/icon.png' %}" type="image/png">
+  <link rel="stylesheet" href="{% static 'adminlte/bower_components/bootstrap/dist/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'adminlte/bower_components/font-awesome/css/font-awesome.min.css' %}">
+  <link rel="stylesheet" href="{% static 'adminlte/bower_components/Ionicons/css/ionicons.min.css' %}">
+  <link rel="stylesheet" href="{% static 'adminlte/css/AdminLTE.min.css' %}">
+  <link rel="stylesheet" href="{% static 'adminlte/plugins/animsition/animsition.css' %}">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="{% static 'adminlte/plugins/iCheck/square/blue.css' %}">
+  <!-- Google Font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  <script src="{% static 'adminlte/bower_components/jquery/dist/jquery.min.js' %}"></script>
+
+  
+
+  {% block extrajs %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+          $('#id_username').attr('autocapitalize', 'off').focus();
+          {% with error_username=form.username.errors|length %}
+          $("#id_username").attr('placeholder', '{{form.username.label}}{% if not form.this_is_the_login_form.errors and error_username > 0 %} - {{ form.username.errors|striptags }}{% endif %}');
+          {% endwith %}
+          {% with error_password=form.password.errors|length %}
+          $("#id_password").attr('placeholder', '{{form.password.label}}{% if not form.this_is_the_login_form.errors and error_password > 0 %} - {{ form.password.errors|striptags }}{% endif %}');
+          {% endwith %}
+        })
+    </script>
+{% endblock %}
+</head>
+
+<body class="hold-transition login-page animsition" style="background: url('{% static 'adminlte/img/bg-user.jpg' %}');background-repeat: no-repeat;
+    background-attachment: fixed; background-size:cover; overflow:hidden;">
+{% block page_content %}
+    <div class="login-box">
+      <div class="login-logo">
+        <span style="font-weight:bold;">
+            E-Businness
+        </span>
+      </div>
+      <!-- /.login-logo -->
+      <div class="login-box-body">
+      <h2 style="margin-top: -2%" align="center">Log In</h2>
+          <p class="lead">
+                                <!-- MESSAGE -->
+            {% block messages %} {% if messages %}
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-sm-12">
+                    {% for message in messages %}
+                    <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'success' %}alert-success{% else %}alert-info{% endif %} {% if message.tags %}{{ message.tags }}{% endif %} alert-dismissible fade in" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+                        </button>
+                        <strong>Holy guacamole!</strong> {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %} {% endblock messages %}
+            <!-- END MESSAGE -->
+        </p>
+        {% if form.errors and not form.non_field_errors %}
+        <div class="text-center">
+            <div class="alert alert-warning alert-dismissable">
+                <button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>
+                <strong>Warning!</strong>
+                <p class="errornote">{% if form.errors.items|length == 1 %}{% trans "Please correct the error below." %}{% else %}{% trans "Please correct the errors below." %}{% endif %}</p>
+            </div>
+        </div>
+        {% endif %} {% if form.non_field_errors %}
+        <div class="text-center">
+            <div class="alert alert-warning alert-dismissable">
+                <button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>
+                <strong>Warning!</strong> {% for error in form.non_field_errors %}
+                <p class="errornote">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %} 
+
+        <form name="form" id="login-form" method="post" action="{{ app_path }}">
+         {% csrf_token %}
+         <div class="{% if not form.this_is_the_login_form.errors and form.username.errors %}{% endif %}">
+                <div class="form-group has-feedback">
+                    <input type="text" name="username" class="form-control" placeholder="Username" required />
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                </div>
+            </div>
+
+            <div class="{% if not form.this_is_the_login_form.errors and form.password.errors %} {% endif %}">
+                <div class="form-group has-feedback">
+                    <input type="password" name="password" class="form-control" placeholder="Password" required />
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+            </div>
+            <div align="right">
+                <a><button class="btn btn-success btn-login btn-flat" style="margin:6px;"> Log in</button></a>
+                <!-- <a class="reset_pass" href="#">Lost your password?</a> -->
+            </div>
+        </form>
+
+      </div>
+      <!-- /.login-box-body -->
+
+    </div>
+<!-- /.login-box -->
+{% endblock %}
+
+<!-- jQuery 3 -->
+<script src="{% static 'adminlte/plugins/animsition/animsition.js' %}"></script>
+  <script type="text/javascript">
+    $(".animsition").animsition({
+      inClass: 'fade-in',
+      outClass: 'fade-out',
+      inDuration: 2000,
+      outDuration: 800,
+      linkElement: '.animsition-link',
+      // e.g. linkElement: 'a:not([target="_blank"]):not([href^="#"])'
+      loading: true,
+      loadingParentElement: 'body', //animsition wrapper element
+      loadingClass: 'animsition-loading',
+      loadingInner: '', // e.g '<img src="loading.svg" />'
+      timeout: false,
+      timeoutCountdown: 5000,
+      onLoadEvent: true,
+      browser: [ 'animation-duration', '-webkit-animation-duration'],
+      // "browser" option allows you to disable the "animsition" in case the css property in the array is not supported by your browser.
+      // The default setting is to disable the "animsition" in a browser that does not support "animation-duration".
+      overlay : false,
+      overlayClass : 'animsition-overlay-slide',
+      overlayParentElement : 'body',
+      transition: function(url){ window.location.href = url; }
+  })
+</script>
+
+<!-- Bootstrap 3.3.7 -->
+<script src="{% static 'adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+<!-- iCheck -->
+<script src="{% static 'adminlte/plugins/iCheck/icheck.min.js' %}"></script>
+<script>
+  $(function () {
+    $('input').iCheck({
+      checkboxClass: 'icheckbox_square-blue',
+      radioClass: 'iradio_square-blue',
+      increaseArea: '20%' // optional
+    });
+  });
+</script>
+</body>
+</html>

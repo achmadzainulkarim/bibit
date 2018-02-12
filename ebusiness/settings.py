@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'adminLTE_template',
+    'admin_tools.menu',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -54,7 +56,9 @@ ROOT_URLCONF = 'ebusiness.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,4 +125,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
+
 STATIC_URL = '/static/'
+
+LOGINAS_REDIRECT_URL = '/admin/'
+
+LOGIN_REDIRECT_URL = '/admin'
+
+STATICFILES_DIRS = (
+	os.path.join(BASE_DIR, "static"),
+)
+
+SUIT_CONFIG = {
+	'ADMIN_NAME': 'E-Business',
+	'LIST_PER_PAGE': 50,
+}
+
+ADMIN_TOOLS_MENU = 'menu.CustomMenu'

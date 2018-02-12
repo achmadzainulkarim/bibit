@@ -1,0 +1,25 @@
+{% load admin_tools_menu_tags i18n %} {% spaceless %}
+{% if not item.is_empty %}
+
+    <li {% if child_item %}{% if selected %}class="active"{% endif %}{% endif %}{% ifequal index 1 %}{% endifequal %}{% if item.children %} class="treeview {% if selected %} active menu-open {% endif %} " {% endif %}>
+        <a href="{% if item.url and item.enabled %}{{ item.url }}{% else %}#sidebar{% endif %}"{% if item.description %} title="{{ item.description }}"{% endif %}{% if item.accesskey %} accesskey="{{ item.accesskey }}"{% endif %}>
+            {% if item.icon %}
+                <i class="{{ item.icon }}"></i>
+            {% else %}
+                 <i class="fa fa-circle-o"></i>
+            {% endif %}
+                <span>{% trans item.title %}</span>
+                 
+            {% if item.children and item.enabled %}
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            {% endif %}
+        </a> {% if item.children and item.enabled %}
+        <ul class="treeview-menu">
+           <!--  -->
+            {% with index=index|add:"1" %} {% for child_item in item.children %} {% admin_tools_render_menu_item child_item index %} {% endfor %} {% endwith %}
+        </ul>
+        {% endif %}
+    </li>
+{% endif %}{% endspaceless %}

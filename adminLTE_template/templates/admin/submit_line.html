@@ -1,0 +1,23 @@
+{% load i18n admin_urls %}
+<div class="submit-row">
+{% url opts|admin_urlname:'changelist' as back_url %}
+{% if show_save %}
+	{% if original and not akses_spesial and original.created_by and original.status %}
+		{% if original.created_by != request.user or original.status == 1 and original.created_by == request.user %}
+		{% else %}
+			<input type="submit" value="{% trans 'Save' %}" class="btn btn-primary waves-effect" name="_save" />
+			{% if show_save_and_add_another %}<input class="btn btn-primary waves-effect" type="submit" value="{% trans 'Save and add another' %}" name="_addanother" />{% endif %}
+		{% endif %}
+	{% else %}
+		<input type="submit" value="{% trans 'Save' %}" class="btn save" name="_save" />
+		{% if show_save_and_add_another %}<input class="btn btn-warning waves-effect" type="submit" value="{% trans 'Save and add another' %}" name="_addanother" />{% endif %}
+	{% endif %}
+	{% if show_delete_link %}
+	    {% url opts|admin_urlname:'delete' original.pk|admin_urlquote as delete_url %}
+	    <a href="{% add_preserved_filters delete_url %}" class="deletelink pull-left"><button class="btn btn-danger">{% trans "Delete" %}</button></a>
+	{% endif %}
+{% endif %}
+{% if not is_popup %}
+<input type="button" onclick="location.href='{% add_preserved_filters back_url %}'" value="{% trans 'Kembali' %}" class="btn btn-info waves-effect" name="_back" />
+{% endif %}
+</div>

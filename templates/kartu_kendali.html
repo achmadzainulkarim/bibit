@@ -1,0 +1,151 @@
+
+<style type="text/css">
+		hr {
+		    border: none;
+		    height: 1px;
+		    /* Set the hr color */
+		    color: #333; /* old IE */
+		    background-color: #333; /* Modern Browsers */
+		}
+		.table {
+		  border-collapse: collapse;
+		  /*border-top: 2px solid black;*/
+		}
+		.table td, table th {
+		  border: 2px solid black;
+		}
+		.table tr:first-child td {
+		  border-top: 0px;
+		}
+		.table tr:last-child td {
+		  border-bottom: 0;
+		}
+		.table tr td:first-child,
+		.table tr th:first-child {
+		  border-left: 0;
+		}
+		.table tr td:last-child,
+		.table tr th:last-child {
+		  border-right: 0;
+		}
+
+		.kop {
+		  border-collapse: collapse;
+		  position: relative;
+		  /*top: 100px;*/
+		  left: 15px;
+		  z-index: 1000;
+		}
+		.kop td{
+		  border: 1px solid black;
+		  padding: 1px;
+		}
+
+		.rotate {
+		 transform: rotate(-90deg);
+ 		 /*-moz-transform: rotate(-1deg);*/
+ 		 font-weight: bold;
+ 		 position: relative;
+ 		 left: -280px;
+ 		 top: -20px;
+ 		 z-index: 2;
+ 		 /*color: rgba(0,0,0,0);*/
+		}
+
+
+		page{
+		  /*background: white;*/
+		  height: : 10.5cm;
+		  width: : 16cm;
+		  z-index: 90;
+		  position: relative;
+		  /*box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);*/
+		}
+		@media print {
+		  body, page {
+			margin-right: 5cm;
+			margin-top: -1.5cm;
+			box-shadow: 0;
+		  }
+		  @page { 
+			margin: 0px; /* Menghapus header & Footer browser */
+			size: : 33cm 21cm; /* Ngefixkan kertas ke F4 Landscape*/
+			size: portrait;
+		  }
+		  page{
+			border-radius: 0;
+			font-size: 11px;
+		  }
+		}
+
+		@media print
+		{
+		  table { page-break-after:auto }
+		  tr    { page-break-inside:avoid; page-break-after:auto }
+		  td    { page-break-inside:avoid; page-break-after:auto }
+		  thead { display:table-header-group }
+		  tfoot { display:table-footer-group }
+		  .hidden-print { display: none; }
+		  .rotate{color: black;}
+		}
+
+		.rounded{
+			border-radius: 15px;
+		    background: #fff;
+		    padding: 15px; 
+		    /*width: 200px;*/
+		    height: 480px; 
+		}
+		.grad{
+			/*border-radius: 15px;*/
+		    background: linear-gradient(to right, #e8e8e8, #eeeeee, #eeeeee, #eeeeee, #eeeeee, #eeeeee); 
+		    position: relative; 
+		    top: -50px; 
+		    left: -50px;
+		    padding: 15px; 
+		    /*width: 200px;*/
+		    height: 480px; 
+		}
+
+	</style>
+<span style="position: relative; top:55px; left: 480px; z-index: 9999; color: rgba(0,0,0,0);">M00001</span>
+<h4 class="rotate">K A R T U &nbsp;&nbsp; K E N D A L I</h4>
+	<div id="halaman_print_id" class="col-md-8 rounded" style="border: 0px; background: white; position: relative; left: 15px; top: -50px">
+	<br>
+		<table class="table" width="90%">
+			<tbody><tr>
+				<td width="40%">Indeks : Pelimpah Banjir </td>
+				<td width="25%">No. Urut : 1 </td>
+				<td align="center" width="5%" style="font-size: 25px; font-weight: bold;">M</td>
+				<td width="20%">Kode : 611-13 </td>
+			</tr>
+			<tr>
+				<td colspan="4">Isi Ringkasan :<br> 12121212 </td>
+			</tr>
+			<tr>
+				<td colspan="4">Lampiran :  </td>
+			</tr>
+			<tr>
+				<td colspan="4">Dari : 1212 </td>
+			</tr>
+			<tr>
+				<td>Tanggal Naskah Dinas : <br> 21 - 12 - 2017 <br></td>
+				<td colspan="3">Nomor Naskah Dinas : <br>
+				89898
+				<br></td>
+			</tr>
+			<tr>
+				<td>Pengolah: <br>
+				<span id="nama_pengolah_span"></span>
+				<br></td>
+				<td colspan="2">Tanggal Diteruskan / Dikirim : 
+				28 - 12 - 2017
+				<br></td>
+				<td>Paraf</td>
+			</tr>
+			<tr>
+				<td colspan="4">Catatan:<br><br><br><br><br></td>
+			</tr>
+		</tbody></table>
+	</div>
+<!-- <h2 class="rotate">K A R T U &nbsp;&nbsp; K E N D A L I</h2> -->

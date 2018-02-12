@@ -1,0 +1,281 @@
+{% extends "admin/base.html" %} 
+{% load i18n admin_static admin_tools_menu_tags %}
+
+{% block title %} 
+  {{ title }} {{ site_title|default:_('SMKT | Dashboard') }} 
+{% endblock %}
+
+{% block extrastyle %}
+  {{ block.super }}
+    <link rel="stylesheet" href="{% static 'adminlte/plugins/animsition/animsition.css' %}">
+    <link rel="stylesheet" href="{% static 'adminlte/plugins/toastr-js/toastr.min.css' %}">
+    <link rel="stylesheet" href="{% static 'adminlte/plugins/chosen/chosen.min.css' %}">
+
+    <style type="text/css">
+      .img-circles {
+    border-radius: 50%;
+}
+.img-circles {
+    border-radius: 0;
+}
+
+.ratio {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    height: 0;
+    padding-bottom: 100%;
+    position: relative;
+    width: 100%;
+}
+.img-circles {
+    border-radius: 50%;
+}
+.img-responsive {
+    display: block;
+    height: auto;
+    max-width: 100%;
+}
+p.break{
+  word-break: 100px;
+  font-weight: 800;
+  background: rgba(255,255,255,0.7);
+  border-color: white;
+}
+.user-panel-custom{
+  padding: 10px;
+}
+    .chosen-container-single .chosen-single{
+      height: 33px;
+      min-width: 200px;
+    }
+    .chosen-container.chosen-with-drop .chosen-drop {
+        min-width: 200px;
+    }
+    .chosen-single span{
+      top:4px;
+      position: relative;
+    }
+    .chosen-single div{
+      padding:5px;
+      margin-right: 6px;
+    }
+    .chosen-drop .chosen-search input{
+      height: 30px !important;
+    }
+    </style>
+{% endblock %}
+
+{% block extrajs %}
+{{ block.super }}
+  <script src="{% static 'adminlte/plugins/animsition/animsition.js' %}"></script>
+  <script src="{% static 'adminlte/plugins/toastr-js/toastr.min.js' %}"></script>
+  <script src="{% static 'adminlte/plugins/chosen/chosen.jquery.js' %}"></script>
+  <!-- <script src="{% static 'admin/js/RelatedObjectLookups.js' %}"></script> -->
+  <script type="text/javascript">
+
+    // $(document).ready(function(){
+      // $('select').chosen()
+    // })
+
+    var a = 0
+    $(".sidebar-toggle").click(function(){
+      if(a == 0){
+        $('#status_user').hide()
+        $('#nama_user').hide()
+        a=1
+      }
+      else{
+        $('#status_user').show()
+        $('#nama_user').show()
+        a=0
+      }
+    })
+    $(".main-sidebar").hover(function(){
+        if(a == 1){
+          $('#status_user').show()
+          $('#nama_user').show()
+        }
+    })
+    $(".main-sidebar").mouseleave(function(){
+        if(a == 1){
+          $('#status_user').hide()
+          $('#nama_user').hide()
+        }
+    })
+
+    $(".animsition").animsition({
+      inClass: 'fade-in',
+      outClass: 'fade-out',
+      inDuration: 2000,
+      outDuration: 800,
+      linkElement: '.animsition-link',
+      // e.g. linkElement: 'a:not([target="_blank"]):not([href^="#"])'
+      loading: true,
+      loadingParentElement: 'body', //animsition wrapper element
+      loadingClass: 'animsition-loading',
+      loadingInner: '', // e.g '<img src="loading.svg" />'
+      timeout: false,
+      timeoutCountdown: 5000,
+      onLoadEvent: true,
+      browser: [ 'animation-duration', '-webkit-animation-duration'],
+      // "browser" option allows you to disable the "animsition" in case the css property in the array is not supported by your browser.
+      // The default setting is to disable the "animsition" in a browser that does not support "animation-duration".
+      overlay : false,
+      overlayClass : 'animsition-overlay-slide',
+      overlayParentElement : 'body',
+      transition: function(url){ window.location.href = url; }
+  })
+
+    function toast_server_error(msg_, type_){
+        toastr.options = {
+          "closeButton": true,
+          "debug": false,
+          "newestOnTop": false,
+          "progressBar": false,
+          "positionClass": "toast-top-right",
+          "preventDuplicates": false,
+          "onclick": null,
+          "showDuration": "300",
+          "hideDuration": "1000",
+          "timeOut": "5000",
+          "extendedTimeOut": "1000",
+          "showEasing": "swing",
+          "hideEasing": "linear",
+          "showMethod": "fadeIn",
+          "hideMethod": "fadeOut"
+        }
+
+        if(typeof type_ == "undefined"){
+            type_ = "error"
+        }
+        if(typeof msg_ == "undefined"){
+            toastr[type_]("Terjadi kesalahan pada koneksi server.", "Error")
+        }
+        else{
+            toastr[type_](msg_)
+        }
+    }
+
+  </script>
+{% endblock %}
+
+{% block header %}
+{% if not is_popup %}
+  <header class="main-header">
+    <!-- Logo -->
+    <a href="#" class="logo" style="background-color: #7CB342;">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini" style="font-weight: bold; font-size: 30px;"> 
+      EB
+      </span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg" style="font-weight: bold; font-size: 30px;">
+      E-Business
+      </span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+
+    <nav class="navbar navbar-static-top" style="background-color:#9EC65C;">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+        <!-- <span class="sr-only">Toggle navigation</span> -->
+      </a>
+
+      <div class="navbar-custom-menu" style="margin-right: 20px;">
+        <ul class="nav navbar-nav">
+          <!-- Messages: style can be found in dropdown.less-->
+          <!-- User Account: style can be found in dropdown.less -->
+          {% block dropdown_logentry %}
+          <li class="dropdown notifications-menu">
+            <ul class="dropdown-menu" style="min-width: 350px;">
+              <li class="header">Riwayat Aktifitas</li>
+              {% load access %}
+              {% get_logs request.user 4 as admin_log %}
+              {% for entry in admin_log.0 %}
+              <li>
+                <!-- inner menu: contains the actual data -->
+                <ul class="menu" >
+                  <li>
+                    <a href="#">
+                      <i class="fa fa-{% if entry.is_addition %}plus-circle{% endif %}{% if entry.is_change %}edit{% endif %}{% if entry.is_deletion %}times{% endif %} fa-fw" style="color: #{% if entry.is_addition %}5cb85c{% endif %}{% if entry.is_change %}f0ad4e{% endif %}{% if entry.is_deletion %}d9534f{% endif %};"></i>
+                      <span class="block" style="font-size: 13px"><strong>{{ entry.object_repr }}</strong> {% if entry.content_type %}{% filter capfirst %}({% trans entry.content_type.name %}){% endfilter %}{% else %}{% trans '(Konten Tidak diketahui)' %}{% endif %}</p></span>
+
+                      <span class="text-muted block-time">
+                        {{ entry.action_time|timesince }} {% trans "yang lalu" %}
+                      {% if entry.get_change_message %}
+
+                            <span class="pull-right" data-toggle="tooltip" data-html="true" title="<b>{{ entry.get_change_message|truncatechars:40 }}</b>"><i class="fa fa-chevron-circle-up" style="color: #0a83ff"></i></span>
+                        {% endif %}
+                      </span>
+                    </a>
+                  </li>
+                  
+                </ul>
+              </li>
+              {% endfor %}
+              <li class="footer"><a href="#">{% trans "Lihat Semua Aktifitas" %}</a></li>
+            </ul>
+          </li>
+          {% endblock %}
+        </ul>
+      </div>
+    </nav>
+  </header>
+  {% endif %}
+ {% endblock %}
+
+{% block header_content %}
+{% if not is_popup %}
+	<section class="content-header">
+      <h1>
+        {% block icotitle %}<i class="fa fa-desktop"></i>&nbsp;{% endblock %}{% block content_title %}{% if opts.verbose_name_plural%} {{ opts.verbose_name_plural|capfirst }} {% else %} Dashboard {% endif %}{% endblock %}
+      </h1>
+      {% block breadcrumbs %}
+          <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Dashboard</li>
+          </ol>
+      {% endblock %}
+    </section>
+{% endif %}
+{% endblock %}
+
+{% block left_sidebar %}
+    {% if not is_popup %}
+    <aside class="main-sidebar" style="background-color:#7CB342;">
+      <!-- sidebar: style can be found in sidebar.less -->
+      <section class="sidebar">
+        <!-- Sidebar user panel -->
+
+        <div class="user-panel-custom" style="background-image: url({% static 'adminlte/img/bg-user.jpg' %}); border-top:white 1px solid; border-bottom:white 2px solid; display: block;" >
+          <center>
+            <img src="{% static 'adminlte/img/avatar6.png' %}" class="img-circle" alt="User Image" width="70%">
+          </center>
+          <br>
+          <div id="scrolled">
+          <p class="break panel panel-primary" align="center" id="nama_user" style="text-transform:uppercase;">
+                {% filter force_escape %}
+                   {% firstof user %}
+                {% endfilter %}
+          </p>
+            <center>
+              <a href="{% url 'admin:password_change' %}" class="btn btn-warning" title="Change password">
+                <span class="fa fa-lock"></span>
+              </a>
+              <a href="{% url 'admin:logout' %}" class="btn btn-danger" title="Log Out">
+                <span class="fa fa-sign-out"></span>
+              </a>
+            </center>
+          </div>
+        </div>
+          <ul class="sidebar-menu" data-widget="tree">
+            {% admin_tools_render_menu %}
+          </ul>
+
+      </section>
+      <!-- /.sidebar -->
+    </aside>
+    {% endif %}
+  {% endblock %}

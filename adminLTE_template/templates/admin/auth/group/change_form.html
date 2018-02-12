@@ -1,0 +1,37 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_static access admin_urls widgets %}
+
+{% block extrastyle %}
+	{{block.super}}
+	<style type="text/css">
+		select[multiple]{
+			width: 50%
+		},
+		h2{
+			font-size: 20px
+		}
+
+	</style>
+{% endblock %}
+
+{% block extrajs %}
+{{block.super}}
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#id_permissions_add_all_link").css({"margin-left": "10px"});
+			$("#id_permissions_remove_all_link").css({"margin-left": "10px"});
+			$("h2").css({"font-size": "20px", "font-weight": "600"});
+
+			$('.selector-chooser').css({"margin-top": "20px"});
+
+			$('#id_permissions_add_link').append('<i class="fa fa-arrow-down panah-bawah"></i>')
+			$('.panah-bawah').css({"margin-left": "3px"})
+
+			$('#id_permissions_remove_link').append('<i class="fa fa-arrow-up panah-atas"></i>')
+			$('.panah-atas').css({"margin-left": "3px"})
+			
+			
+		})
+		
+	</script>
+{% endblock %}

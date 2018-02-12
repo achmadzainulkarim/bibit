@@ -1,0 +1,477 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls admin_static admin_modify %}
+{% load crispy_forms_tags %}
+{% crispy form %}
+
+{% block title %}{{ opts.verbose_name }}{% endblock %}
+{% block icotitle %}<i class="fa fa-pencil"></i>&nbsp;{% endblock %}
+{% block content_title %}
+    {% if add %} {% trans 'Add' %} {% else %} {% trans 'Edit' %} {% endif %} {{ opts.verbose_name }}    
+{% endblock %}
+
+{% block coltype %}colM{% endblock %}
+
+{% block extrascript %}
+    {{ block.super }}
+
+    <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+    
+    {{ media }}
+{% endblock %}
+
+{% block custom_style %}
+	<!--  -->
+{% endblock %}
+{% block bodyclass %}
+    {{ block.super }} {{ opts.app_label }}-{{ opts.object_name.lower }} change-form
+{% endblock %}
+
+
+{% if not is_popup %}
+  {% block breadcrumbs %}
+    <ol class="breadcrumb">
+     <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+      <li>
+        <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{% firstof opts.app_config.verbose_name app_label|capfirst|escape %}</a>
+        <!-- <span class="divider">&raquo;</span> -->
+      </li>
+      <li>
+        {% if has_change_permission %}
+          <a href="{% url opts|admin_urlname:'changelist' %}">
+            {{ opts.verbose_name_plural|capfirst }}</a>{% else %}
+          {{ opts.verbose_name_plural|capfirst }}{% endif %}
+        <!-- <span class="divider">&raquo;</span> -->
+      </li>
+      <li class="active" style="font-weight: 600; font-size: 15px;">
+        {% if add %}{% trans 'Add' %} {{ opts.verbose_name }}{% else %}{{ original|truncatewords:"18" }}{% endif %}
+      </li>
+    </ol>
+  {% endblock %}
+{% endif %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'adminlte/scripts/bootstrap-select/css/bootstrap-select.min.css' %}">
+    
+    <link rel="stylesheet" href="{% static 'adminlte/scripts/jquerydatetimepicker/jquery.datetimepicker.min.css' %}">
+    <style type="text/css">
+    	.font-bold {
+			font-weight: 700;
+		}
+		.font-nonbold {
+			font-weight: 100;
+		}
+		.size-date{
+			width: 25%
+		}
+		.size-select{
+			width: 50%
+		}
+		.onoffswitch {
+		    position: relative; width: 40px;
+		    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+		}
+		.onoffswitch-checkbox {
+		    display: none;
+		}
+		.onoffswitch-label {
+		    display: block; overflow: hidden; cursor: pointer;
+		    border: 2px solid #999999; border-radius: 13px;
+		}
+		.onoffswitch-inner {
+		    display: block; width: 200%; margin-left: -100%;
+		    transition: margin 0.3s ease-in 0s;
+		}
+		.onoffswitch-inner:before, .onoffswitch-inner:after {
+		    display: block; float: left; width: 50%; height: 18px; padding: 0; line-height: 18px;
+		    font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+		    box-sizing: border-box;
+		}
+		.onoffswitch-inner:before {
+		    content: "YA";
+		    padding-left: 10px;
+		    background-color: #34A7C1; color: #FFFFFF;
+		}
+		.onoffswitch-inner:after {
+		    content: "TIDAK";
+		    padding-right: 10px;
+		    background-color: #EEEEEE; color: #999999;
+		    text-align: right;
+		}
+		.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+		    margin-left: 0;
+		}
+		.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+		    right: 0px; 
+		}
+		a.disabled {
+		   pointer-events: none;
+		   cursor: crosshair;
+		}
+		.empty-form {
+		    display: none;
+		}
+		.inline-group {
+			border: 1px solid #ccc;
+			margin: 10px 0;
+			padding: 0;
+		}
+		.inline-group h2{
+			font-size: 20px;
+			padding-left: 10px;
+			font-weight: 600;
+		}
+		.inline-related {
+		    position: relative;
+		}
+		.inline-related h3 {
+		    /*background: #e1e1e1 url("{% static "images/nav-bg.gif" %}") repeat-x scroll left top;*/
+		    border-bottom: 1px solid #ddd;
+		    color: #666;
+		    font-size: 15px;
+		    margin: 0;
+		    padding: 6px 12px;
+		}
+		.inline-related h3 {
+		    color: #666;
+		    font-size: 15px;
+		}
+		.inline-related h3 span.delete {
+		    float: right;
+		    margin-top:-5px;
+		}
+		.inline-related h3 span.delete label {
+		    font-size: 11px;
+		    margin-left: 2px;
+		    position: relative;
+    		top: -3px;
+		}
+		.inline-related fieldset {
+		    background: #fff none repeat scroll 0 0;
+		    border: medium none;
+		    margin: 0;
+		    width: 100%;
+		}
+		.inline-related .form-row {
+		    border-bottom: 1px solid #eee;
+		    font-size: 11px;
+		    margin-bottom: 0;
+		    padding: 8px 12px;
+		}
+		.inline-group div.add-row, .inline-group .tabular tr.add-row td {
+		    /*background: #e1e1e1 url("{% static "images/nav-bg.gif" %}") repeat-x scroll left top;*/
+		    border-bottom: 1px solid #ddd;
+		    color: #666;
+		    padding: 3px 5px;
+		}
+		.inline-group ul.tools a.add, .inline-group div.add-row a, .inline-group .tabular tr.add-row td a {
+		    background: rgba(0, 0, 0, 0) url("{% static 'admin/img/icon-addlink.svg' %}") no-repeat scroll 0 50%;
+		    font-size: 11px;
+		    outline: 0 none;
+		    padding-left: 14px;
+		}
+		.inline-related .form-group {
+		    margin-left: 0;
+		    margin-right: 0;
+		}
+		.inline-group .add-row{
+			text-align: right;
+		}	
+
+
+		.related-widget-wrapper{
+			overflow: visible;
+			padding-right: 42px;
+			float: unset;
+		}
+		.related-widget-wrapper .add-related{
+		    /*position: absolute;*/
+		    right: 36px;
+		    top: 6px;
+		}
+		.related-widget-wrapper .change-related{
+		    /*position: absolute;*/
+		    right: 20px;
+		    top: 6px;
+		}
+		.related-date-wrapper .vDateField, .related-date-wrapper .vTimeField{
+			height: 32px;
+			width: 102px;
+			background-color: #fff;
+   			border: 1px solid #dbe0e2;
+		    border-radius: 2px;
+		    box-shadow: none;
+		    color: #616f77;
+		    filter: none !important;
+		    outline: 0 none;
+		    transition: all 0.2s linear 0s;
+		    background-image: none;
+		    padding: 6px 12px;
+
+		}
+		div.related-widget-wrapper + span.help-block {
+		    display: inline-block;
+		}
+		div.related-widget-wrapper select.form-control{
+			display: inline-block;
+			width: unset;
+			vertical-align: inherit;
+		}
+		.datetime br {
+    		display: none;
+		}
+		.datetime .datetimeshortcuts {
+ 		   padding-right: 10px;
+		}
+		.related-date-wrapper .vTimeField:first-child {
+		    margin-left: 0;
+		}
+		.related-date-wrapper .vTimeField{
+			margin-left:11px; 
+		}
+		.calendarbox, .clockbox {
+		    z-index: 2;
+		}
+		.datetimeshortcuts{
+			margin-top: 4px;
+		}
+
+		.calendar caption{
+		    text-align: center;
+		}
+		.calendarnav-previous, .calendarnav-next {
+		    margin-top: 5px;
+		}
+		.calendarbox, .clockbox{
+			border: 1px solid activeborder;
+		}	
+		.bootstrap-select.form-control:not([class*=col-]){
+			width: 50%
+		}
+    </style>
+    <!-- note that there's also blue.uni-form.css and dark.uni-form.css available if you want to try changing defaults up -->
+<!-- <link rel="stylesheet" href="{% static 'uni_form/uni-form.css' %}" type="text/css" />
+<link rel="stylesheet" href="{% static 'uni_form/default.uni-form.css' %}" type="text/css" /> -->
+<!-- uni-form JS library, optional -->
+<!-- <script src="{% static 'uni_form/uni-form.jquery.js' %}" type="text/javascript"></script> -->
+
+{% endblock %}
+
+{% block main_content %}
+{# adminform.form.errors #}
+    <div class="main_container">
+        <!-- page content -->
+       <div class="row">
+        <div class="col-md-12">
+          <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">Perhatian !</h3>
+
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+               
+                {% block form_top %}
+	                {% if form_top %}
+		                 <div class="alert alert-info">
+		                </div>
+	                {% endif %}
+                {% endblock %}
+                  {% if not has_delete_permission and not has_change_permission and add %}
+                  	<div class="alert alert-danger">
+                      	Pastikan yang Anda inputkan benar, karena Anda <strong>HANYA</strong> dapat menambahkan data ini dan <strong>TIDAK</strong> dapat mengubah ataupun menghapus data yang telah Anda tambahkan. 
+                  	</div>  
+              	{% elif not has_delete_permission and has_add_permission and add %}
+                  	<div class="alert alert-danger">                    
+                      	Pastikan yang Anda inputkan benar, karena <strong>TIDAK</strong> dapat menghapus data ini. 
+                 	</div>
+              	{% endif %}
+              	{% if errors %}
+                    <div class="alert alert-danger">
+						{% blocktrans count counter=errors|length %}Harap perbaiki kesalahan yang ada di bawah ini.{% plural %}Harap perbaiki kesalahan yang ada di bawah ini.{% endblocktrans %}
+						{{ adminform.form.non_field_errors }}
+                    </div>
+              	{% endif %} 
+              	<blockquote class="blockquote-success custom-font" style="margin-bottom: 0px;">
+                      <p>
+                      	{% blocktrans %}Inputan dengan label yang memakai huruf <strong>tebal</strong> wajib diisi. {% endblocktrans %}</p>
+                      <p>
+                      	Tekan tanda <img width="10" height="10" src="{% static "admin/img/icon-addlink.svg" %}" alt="Tambah Kegiatan Lainnya"> untuk menambahkan item lainnya yg tidak tersedia dalam list pilihan.</p>
+                      <p>
+                      	Tekan tanda <img width="10" height="10" src="{% static "admin/img/icon-changelink.svg" %}" alt="Tambah Kegiatan Lainnya"> untuk mengubah item dalam list pilihan.</p>
+                </blockquote>
+                    
+            </div>
+          </div>
+        </div>
+       </div>
+
+
+          <div class="row">
+	        <div class="col-md-12">
+	          <div class="box box-primary">
+	            <div class="box-header with-border">
+	              <h3 class="box-title">Form Input</h3>
+
+	              <div class="box-tools pull-right">
+	                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+	                </button>
+	                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+	              </div>
+	            </div>
+               	
+                  	<form class="form-horizontal" role="form" {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.model_name }}_form">{% csrf_token %}
+                  	<div class="box-body">       
+                    	{% if is_popup %}<input type="hidden" name="{{ is_popup_var }}" value="1" />{% endif %}
+                    	{% if to_field %}<input type="hidden" name="{{ to_field_var }}" value="{{ to_field }}" />{% endif %}
+
+                    	{% if save_on_top %}{% block submit_buttons_top %}{% submit_row %}{% endblock %}{% endif %}
+
+	                    {% block field_sets %}
+	                      {% for fieldset in adminform %}
+	                        {% include "admin/includes/fieldset.html" %}
+	                      {% endfor %}
+	                        <br />
+	                    {% endblock %}
+	                    {% block after_field_sets %}{% endblock %}
+	                    {% block inline_field_sets %}
+	                      {% for inline_admin_formset in inline_admin_formsets %}
+	                        {% include inline_admin_formset.opts.template %}
+	                      {% endfor %}
+	                    {% endblock %}
+
+	                    {% block after_related_objects %}{% endblock %}
+	                    {% block admin_change_form_document_ready %}
+	                      <script type="text/javascript">
+	                        (function($) {
+	                          $(document).ready(function() {
+	                            $('.add-another').click(function(e) {
+	                            e.preventDefault();
+	                            showAddAnotherPopup(this);
+
+	                            });
+	                            $('.related-lookup').click(function(e) {
+	                            e.preventDefault();
+	                            showRelatedObjectLookupPopup(this);
+	                          });
+	                          {% if adminform and add %}
+	                            $('form#{{ opts.model_name }}_form :input:visible:enabled:first').focus()
+	                          {% endif %}
+	                          });
+	                        })(django.jQuery);
+	                      </script>
+	                    {% endblock %}
+	                    {# JavaScript for prepopulated fields #}
+	                    {% prepopulated_fields_js %}
+	                    <div class="tile-footer text-right bg-tr-black lter dvd dvd-top" style="padding-top: 100px;">
+	                      {% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
+	                    </div>
+
+                	</div>
+                  </form>
+	           </div>
+          	</div>
+        </div>
+        <!-- /page content -->
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+	{{ block.super }}
+	
+	<script src="{% static 'adminlte/scripts/jquerydatetimepicker/jquery.datetimepicker.full.min.js' %}"></script>
+	<script src="{% static 'adminlte/plugins/chosen/chosen.jquery.min.js' %}"></script>
+	<script src="{% static 'adminlte/scripts/bootstrap-select/js/bootstrap-select.min.js' %}"></script>
+	<script src="{% static 'admin/js/RelatedObjectLookups.js' %}"></script>
+    <!-- <script src="{% static 'scripts/chosen_stuff.js' %}"></script> -->
+    <!-- / custom javascripts  -->
+	<script type="text/javascript">
+	// $('.change-related').hide()
+	// $('.change-related').addClass('disabled')
+	$('.chosen').chosen();
+	$(document).ready(function(){
+		$('.bootstrap-select').css("width", "50%")
+		$('.datetime').css("width", "25%")
+	})
+	
+
+        function open_splash(btnEl){
+            $("#splash .modal-title").html($(btnEl).attr('data-title'))
+            $("#splash .modal-body").html($(btnEl).attr('data-body'))
+        }
+		var Suit = { $: $.noConflict() }; if (!$) $ = Suit.$; 
+
+		$(function(){
+			$('.clickable').on('click',function(){
+			    var effect = $(this).data('effect');
+			        $(this).closest('.panel')[effect]();
+				})
+			$('.parsley-errors-list').animate({
+			    opacity: 0.95,
+			    padding: "5px 0 0",
+			}, 1000, function() {
+			});
+		})
+		// set_chosen_element($('.selectpicker'));
+	</script>
+	
+    <script type="text/javascript">
+    	DATE_INPUT_FORMATS = ["%d-%m-%Y", "%d/%m/%Y", "%d-%m-%Y", "%d/%m/%Y", "%d %b %Y", "%d %B %Y", "%Y-%m-%d"]
+
+        $(document).ready(function () {
+			jQuery('.datepicker').datetimepicker({
+			  timepicker:false,
+			  format:'d-m-Y',
+			});
+			jQuery('.timepicker').datetimepicker({
+			  datepicker:false,
+			  format:'H:i:m'
+			});
+			jQuery('.datetimepicker').datetimepicker({
+				format:'d-m-Y H:i',
+			});
+        });
+        function updateAutoCompleteLinks() {
+    var $this = $(this);
+
+    var select = $this.children('.value-select').first();
+    if (!select) {
+        return;
+    }
+
+    var vals = select.val();
+    var value;
+
+    if (!vals || !vals.length) {
+        value = '';
+    } else {
+        value = vals[0];
+    }
+
+    var links = $this.nextAll('.change-related, .delete-related');
+
+    if (value) {
+        links.each(function () {
+            var elm = $(this);
+            elm.attr('href', elm.attr('data-href-template').replace('__fk__', value));
+        });
+    } else links.removeAttr('href');
+}
+
+$(document).ready(function() {
+    var container = $(document);
+    container.on('change', '.autocomplete-light-widget', updateAutoCompleteLinks);
+    container.find('.autocomplete-light-widget').each(updateAutoCompleteLinks);
+});
+    </script>
+	<script src="{% static 'suit/js/suit.js' %}"></script>
+{% endblock %}
+
+{% block extrajs_site %}
+
+{% endblock %}

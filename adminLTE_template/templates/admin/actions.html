@@ -1,0 +1,31 @@
+{% load i18n widgets %}
+    {% if cl.formset and cl.result_count %}
+        <input type="submit" name="_save" class="btn btn-xs btn-success pull-right changelist-save" value="{% trans 'Simpan' %}"/>
+    {% endif %}
+    {% for field in action_form %}
+        {% if field.label %}
+            <label style="padding-right: 10px;">
+            {{ field.label }} 
+        {% endif %}
+        {% if field.label %}
+            </label>
+        {% endif %}
+        {% if field|is_select %}
+            <div class="col-sm-4">
+                {{ field|addcls:"select2_group form-control" }}
+            </div>
+        {% else %}
+            {{ field }}
+        {% endif %}
+    {% endfor %}
+    <button class="btn btn-sm btn-warning" type="submit" class="button" title="{% trans "Run the selected action" %}" name="index" value="{{ action_index|default:0 }}">{% trans "Jalankan" %}</button>
+    {% if actions_selection_counter %}
+        <span class="action-counter pull-right" data-actions-icnt="{{ cl.result_list|length }}">{{ selection_note }}</span>
+        {% if cl.result_count != cl.result_list|length %}
+        <span class="all">{{ selection_note_all }}</span>
+        <span class="question">
+            <a href="#" title="{% trans "Click here to select the objects across all pages" %}">{% blocktrans with cl.result_count as total_count %}Select all {{ total_count }} {{ module_name }}{% endblocktrans %}</a>
+        </span>
+        <span class="clear"><a href="#">{% trans "Clear selection" %}</a></span>
+        {% endif %}
+    {% endif %}
